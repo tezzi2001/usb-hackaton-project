@@ -1,5 +1,6 @@
 package com.heroku.labshare.model;
 
+import com.heroku.labshare.util.Sets;
 import lombok.Getter;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
@@ -9,9 +10,9 @@ import java.util.stream.Collectors;
 @Getter
 public enum Role {
 
-    MODER(Set.of(Permission.MODERATE)),
-    APPROVED_USER(Set.of(Permission.DEFAULT, Permission.DOWNLOAD_LAB)),
-    NON_APPROVED_USER(Set.of(Permission.DEFAULT));
+    MODER(Sets.of(Permission.MODERATE)),
+    APPROVED_USER(Sets.of(Permission.DEFAULT, Permission.DOWNLOAD_LAB)),
+    NON_APPROVED_USER(Sets.of(Permission.DEFAULT));
 
     private final Set<Permission> permissions;
 

@@ -2,6 +2,7 @@ package com.heroku.labshare.service;
 
 import com.dropbox.core.DbxException;
 import com.dropbox.core.v2.DbxClientV2;
+import com.heroku.labshare.exception.EntityNotFoundException;
 import com.heroku.labshare.json.TaskJson;
 import com.heroku.labshare.json.UserJson;
 import com.heroku.labshare.model.Role;
@@ -46,7 +47,7 @@ public class DataService {
                         .upload(path)
                         .uploadAndFinish(file.getInputStream());
                 Task task = taskJson.toTask(path);
-                User user = userRepository.findById(id).orElseThrow();
+                User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(User.class, id));
                 task.setUser(user);
                 taskRepository.save(task);
             } catch (DbxException | IOException e) {
@@ -61,7 +62,7 @@ public class DataService {
     }
 
     private void approve(Long id) {
-        User user = userRepository.findById(id).orElseThrow();
+        User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(User.class, id));
         user.setRole(Role.APPROVED_USER);
         userRepository.save(user);
     }
