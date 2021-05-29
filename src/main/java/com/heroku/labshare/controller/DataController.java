@@ -76,8 +76,8 @@ public class DataController {
         userService.likeTask(wrapper.getUserId(), wrapper.getTaskId());
     }
 
-    @GetMapping("/fetchTask/{id}")
-    public Task fetchTask(@PathVariable Long id) {
-        return taskService.getTaskById(id);
+    @GetMapping("/fetchTask")
+    public Task fetchTask(@RequestParam Long id) {
+        return taskService.getTaskById(id).get();
     }
 }

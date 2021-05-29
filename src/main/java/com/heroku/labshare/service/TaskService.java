@@ -1,5 +1,9 @@
 package com.heroku.labshare.service;
 
+import java.util.Optional;
+
+import javax.persistence.EntityNotFoundException;
+
 import org.springframework.stereotype.Service;
 
 import com.heroku.labshare.model.Task;
@@ -13,7 +17,8 @@ public class TaskService {
 
     private final TaskRepository taskRepository;
 
-    public Task getTaskById(Long id) {
-        return taskRepository.getById(id);
+    public Optional<Task> getTaskById(Long id) {
+        return taskRepository.findById(id);
+
     }
 }
