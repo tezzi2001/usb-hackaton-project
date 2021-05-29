@@ -68,7 +68,7 @@ public class DataController {
         List<String> inputAsList = query.remove("input");
         filterQuery(query);
 
-        if (inputAsList.isEmpty()) {
+        if (inputAsList == null || inputAsList.isEmpty()) {
             return query.isEmpty() ? searchService.search() : searchService.search(query);
         } else {
             String input = inputAsList.get(0);

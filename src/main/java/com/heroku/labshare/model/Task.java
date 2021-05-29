@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.util.List;
@@ -28,7 +27,6 @@ public class Task {
     private int year;
     @Column(nullable = false)
     private String filePath;
-    @ColumnDefault("0")
     private Integer likeCount;
 
     @ManyToOne()
@@ -37,4 +35,11 @@ public class Task {
 
     @OneToMany(mappedBy = "task")
     private List<Report> reports;
+
+    @PrePersist
+    public void prePersist() {
+        if(likeCount == null) {
+            likeCount = 0;
+        }
+    }
 }
