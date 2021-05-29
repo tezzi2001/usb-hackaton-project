@@ -1,34 +1,31 @@
 package com.heroku.labshare.model;
 
-import java.time.LocalDate;
 import java.util.List;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 
+import lombok.Builder;
 import lombok.Data;
+import org.hibernate.annotations.ColumnDefault;
 
 @Data
 @Entity(name = "tasks")
+@Builder
 public class Task {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String type; // enum
     private String faculty;
     private String specialty;
     private String topic;
     private String description;
     private String subject;
-    private LocalDate year;
+    private int year;
+    @Column(nullable = false)
     private String filePath;
+    @ColumnDefault("0")
     private Integer likeCount;
 
     @ManyToOne()

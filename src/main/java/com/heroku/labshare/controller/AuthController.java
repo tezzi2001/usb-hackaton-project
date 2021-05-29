@@ -1,6 +1,6 @@
 package com.heroku.labshare.controller;
 
-import com.heroku.labshare.dto.UserJson;
+import com.heroku.labshare.json.UserJson;
 import com.heroku.labshare.service.AuthService;
 import com.heroku.labshare.service.UserService;
 import lombok.RequiredArgsConstructor;

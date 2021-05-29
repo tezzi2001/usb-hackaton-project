@@ -1,7 +1,7 @@
 package com.heroku.labshare.service;
 
 import com.auth0.jwt.JWT;
-import com.heroku.labshare.dto.UserJson;
+import com.heroku.labshare.json.UserJson;
 import com.heroku.labshare.model.JwtBlacklist;
 import com.heroku.labshare.model.Role;
 import com.heroku.labshare.model.User;
@@ -32,6 +32,7 @@ public class AuthService {
         if (optionalUser.isEmpty()) {
             String encodedPassword = passwordEncoder.encode(userJson.getPassword());
 
+            // TODO: refactor
             User user = User.builder()
                     .username(userJson.getUsername())
                     .password(encodedPassword)
