@@ -1,0 +1,74 @@
+{
+  "specialties": [
+    {
+      "id": 0,
+      "name": "Вища математика",
+      "specialtyId": 0
+    },
+    {
+      "id": 1,
+      "name": "Функціональне програмування",
+      "specialtyId": 0
+    },
+    {
+      "id": 2,
+      "name": "Системне програмне забезпечення",
+      "specialtyId": 1
+    },
+    {
+      "id": 3,
+      "name": "Комп'ютерна логіка",
+      "specialtyId": 1
+    },
+    {
+      "id": 4,
+      "name": "ІПЗ",
+      "specialtyId": 2
+    },
+    {
+      "id": 5,
+      "name": "Математичний аналіз",
+      "specialtyId": 2
+    },
+    {
+      "id": 6,
+      "name": "Екологія",
+      "specialtyId": 3
+    },
+    {
+      "id": 7,
+      "name": "Біологія",
+      "specialtyId": 3
+    },
+    {
+      "id": 8,
+      "name": "Фінанси",
+      "specialtyId": 4
+    },
+    {
+      "id": 9,
+      "name": "Фінансовий аналіз",
+      "specialtyId": 4
+    },
+    {
+      "id": 11,
+      "name": "Високі науки",
+      "specialtyId": 5
+    },
+    {
+      "id": 12,
+      "name": "Українська мова",
+      "specialtyId": 5
+    },
+    {
+      "id": 13,
+      "name": "Історія",
+      "specialtyId": 6
+    },
+    {
+      "id": 14,
+      "name": "Іноземна мова",
+      "specialtyId": 6
+    }
+  ]
+}
