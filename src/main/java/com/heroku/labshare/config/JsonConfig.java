@@ -24,18 +24,21 @@ public class JsonConfig {
     }
 
     @SneakyThrows
+    @Bean
     public Faculty[] getFaculties() {
         final String facultyJson = readJson("/json/faculties.json");
         return getObjectMapper().readValue(facultyJson, Faculty[].class);
     }
 
     @SneakyThrows
+    @Bean
     public Specialty[] getSpecialties() {
         final String specialtyJson = readJson("/json/specialties.json");
         return getObjectMapper().readValue(specialtyJson, Specialty[].class);
     }
 
     @SneakyThrows
+    @Bean
     public Subject[] getSubjects() {
         final String subjectJson = readJson("/json/subjects.json");
         return getObjectMapper().readValue(subjectJson, Subject[].class);

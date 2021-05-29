@@ -19,8 +19,8 @@ public class UserJson implements Serializable {
     private String username;
     private String email;
     private String password;
-    private String faculty;
-    private String specialty;
+    private int faculty;
+    private int specialty;
 
     public UserJson(User user) {
         this.id = user.getId();

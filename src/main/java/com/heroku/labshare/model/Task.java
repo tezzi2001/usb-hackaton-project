@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.util.List;
@@ -20,21 +19,27 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String faculty;
-    private String specialty;
+    private Integer faculty;
+    private Integer specialty;
     private String topic;
     private String description;
-    private String subject;
-    private int year;
+    private Integer subject;
+    private Integer year;
     @Column(nullable = false)
     private String filePath;
-    @ColumnDefault("0")
     private Integer likeCount;
 
-    @ManyToOne()
+    @ManyToOne
     @JoinColumn(name = "userId")
     private User user;
 
     @OneToMany(mappedBy = "task")
     private List<Report> reports;
+
+    @PrePersist
+    public void prePersist() {
+        if(likeCount == null) {
+            likeCount = 0;
+        }
+    }
 }

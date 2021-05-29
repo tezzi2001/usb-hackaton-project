@@ -14,6 +14,6 @@ public class TokenWithUserWrapper {
     private String token;
     private String username;
     private String email;
-    private String faculty;
-    private String specialty;
+    private int faculty;
+    private int specialty;
 }
