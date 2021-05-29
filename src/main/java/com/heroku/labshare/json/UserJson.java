@@ -1,6 +1,5 @@
 package com.heroku.labshare.json;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.heroku.labshare.model.Role;
 import com.heroku.labshare.model.User;
 import lombok.AllArgsConstructor;

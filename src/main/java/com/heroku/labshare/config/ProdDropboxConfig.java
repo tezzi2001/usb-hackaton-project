@@ -6,7 +6,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
-import static com.heroku.labshare.constant.EnvironmentVariableNames.*;
+import static com.heroku.labshare.constant.EnvironmentVariableNames.DROPBOX_ACCESS_TOKEN;
+import static com.heroku.labshare.constant.EnvironmentVariableNames.DROPBOX_CLIENT_ID;
 
 @Configuration
 @Profile("prod")

@@ -1,18 +1,15 @@
 package com.heroku.labshare.model;
 
+import com.vladmihalcea.hibernate.type.array.LongArrayType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
-import java.util.List;
-
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
-import com.vladmihalcea.hibernate.type.array.IntArrayType;
-import com.vladmihalcea.hibernate.type.array.LongArrayType;
+import javax.persistence.*;
+import java.util.List;
 
 @Data
 @Entity

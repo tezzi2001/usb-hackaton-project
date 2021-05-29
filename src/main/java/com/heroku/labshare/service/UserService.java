@@ -1,12 +1,5 @@
 package com.heroku.labshare.service;
 
-import java.util.Arrays;
-
-import javax.persistence.EntityNotFoundException;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.auth0.jwt.JWT;
 import com.heroku.labshare.json.UserJson;
 import com.heroku.labshare.model.Role;
@@ -14,9 +7,13 @@ import com.heroku.labshare.model.Task;
 import com.heroku.labshare.model.User;
 import com.heroku.labshare.repository.TaskRepository;
 import com.heroku.labshare.repository.UserRepository;
-
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.EntityNotFoundException;
+import java.util.Arrays;
 
 @Service
 @RequiredArgsConstructor

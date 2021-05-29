@@ -1,11 +1,9 @@
 package com.heroku.labshare.service;
 
-import org.springframework.stereotype.Service;
-
 import com.heroku.labshare.model.Task;
 import com.heroku.labshare.repository.TaskRepository;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor

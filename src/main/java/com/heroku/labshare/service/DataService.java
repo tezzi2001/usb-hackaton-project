@@ -1,17 +1,5 @@
 package com.heroku.labshare.service;
 
-import java.io.IOException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
-import javax.persistence.EntityNotFoundException;
-
-import lombok.SneakyThrows;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.dropbox.core.DbxException;
 import com.dropbox.core.v2.DbxClientV2;
 import com.heroku.labshare.json.TaskJson;
@@ -21,8 +9,17 @@ import com.heroku.labshare.model.Task;
 import com.heroku.labshare.model.User;
 import com.heroku.labshare.repository.TaskRepository;
 import com.heroku.labshare.repository.UserRepository;
-
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.persistence.EntityNotFoundException;
+import java.io.IOException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
