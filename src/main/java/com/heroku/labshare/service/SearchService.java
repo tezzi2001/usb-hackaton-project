@@ -32,16 +32,12 @@ public class SearchService {
 
     public SearchResponse search() {
         List<Task> allTasks = taskRepository.findAll();
-        Filter[] allFilters = getAllFilters();
-        TaskJson[] allTaskJsons = allTasks.stream()
-                .map(TaskJson::new)
-                .toArray(TaskJson[]::new);
-        return new SearchResponse(getOnlyPresentFilters(allFilters, allTaskJsons), allTaskJsons);
+        return search(allTasks);
     }
 
     public SearchResponse search(String input) {
-
-        return null;
+        List<Task> allTasks = taskRepository.findTasksByTopic(input);
+        return search(allTasks);
     }
 
     public SearchResponse search(String input, MultiValueMap<String, String> filters) {
@@ -50,6 +46,14 @@ public class SearchService {
 
     public SearchResponse search(MultiValueMap<String, String> filters) {
         return null;
+    }
+
+    private SearchResponse search(List<Task> allTasks) {
+        Filter[] allFilters = getAllFilters();
+        TaskJson[] allTaskJsons = allTasks.stream()
+                .map(TaskJson::new)
+                .toArray(TaskJson[]::new);
+        return new SearchResponse(getOnlyPresentFilters(allFilters, allTaskJsons), allTaskJsons);
     }
 
     //TODO: refactor
