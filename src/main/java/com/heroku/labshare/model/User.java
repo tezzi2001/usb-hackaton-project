@@ -1,13 +1,18 @@
 package com.heroku.labshare.model;
 
-import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
+
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
+
+import com.vladmihalcea.hibernate.type.array.IntArrayType;
+import com.vladmihalcea.hibernate.type.array.LongArrayType;
 
 @Data
 @Entity
@@ -15,6 +20,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@TypeDef(name = "long-array", typeClass = LongArrayType.class)
 public class User {
 
     @Id
@@ -29,6 +35,10 @@ public class User {
     private String specialty;
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @Type(type = "long-array")
+    @Column(columnDefinition = "bigint[]", name = "liked_ids")
+    private Long[] likedIDs;
 
     @OneToMany()
     private List<Task> tasks;

@@ -21,6 +21,7 @@ import com.heroku.labshare.model.Task;
 import com.heroku.labshare.model.User;
 import com.heroku.labshare.repository.TaskRepository;
 import com.heroku.labshare.repository.UserRepository;
+
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -47,10 +48,11 @@ public class DataService {
                 String path = DELIMITER + id + DELIMITER + System.currentTimeMillis() + file.getOriginalFilename();
 
                 dbxClient.files()
-                        .upload(path)
-                        .uploadAndFinish(file.getInputStream());
+                    .upload(path)
+                    .uploadAndFinish(file.getInputStream());
                 Task task = taskJson.toTask(path);
-                User user = userRepository.findById(id).orElseThrow();
+                User user = userRepository.findById(id)
+                    .orElseThrow(() -> new EntityNotFoundException("User not found by id " + id));
                 task.setUser(user);
                 taskRepository.save(task);
             } catch (DbxException | IOException e) {
@@ -65,7 +67,8 @@ public class DataService {
     }
 
     private void approve(Long id) {
-        User user = userRepository.findById(id).orElseThrow();
+        User user = userRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("User not found by id " + id));
         user.setRole(Role.APPROVED_USER);
         userRepository.save(user);
     }

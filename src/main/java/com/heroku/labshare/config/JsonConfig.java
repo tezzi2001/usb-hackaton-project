@@ -1,21 +1,19 @@
 package com.heroku.labshare.config;
 
-import static java.nio.charset.Charset.defaultCharset;
-import static org.apache.logging.log4j.util.Strings.EMPTY;
-
-import java.io.IOException;
-import java.util.Objects;
-
-import org.apache.commons.io.IOUtils;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.heroku.labshare.json.faculty.Faculty;
 import com.heroku.labshare.json.specialty.Specialty;
 import com.heroku.labshare.json.subject.Subject;
-
 import lombok.SneakyThrows;
+import org.apache.commons.io.IOUtils;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import java.io.IOException;
+import java.util.Objects;
+
+import static java.nio.charset.Charset.defaultCharset;
+import static org.apache.logging.log4j.util.Strings.EMPTY;
 
 @Configuration
 public class JsonConfig {

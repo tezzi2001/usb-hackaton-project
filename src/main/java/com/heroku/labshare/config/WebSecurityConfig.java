@@ -1,10 +1,11 @@
 package com.heroku.labshare.config;
 
-import static com.heroku.labshare.constant.SecurityConstants.FETCH_DATA;
-import static com.heroku.labshare.constant.SecurityConstants.FETCH_USER;
-import static com.heroku.labshare.constant.SecurityConstants.SIGN_OUT_URL;
-import static com.heroku.labshare.constant.SecurityConstants.SIGN_UP_URL;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.heroku.labshare.repository.UserRepository;
+import com.heroku.labshare.security.filter.JWTAuthenticationFilter;
+import com.heroku.labshare.security.filter.JWTAuthorizationFilter;
+import com.heroku.labshare.service.AuthService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -19,13 +20,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.heroku.labshare.repository.UserRepository;
-import com.heroku.labshare.security.filter.JWTAuthenticationFilter;
-import com.heroku.labshare.security.filter.JWTAuthorizationFilter;
-import com.heroku.labshare.service.AuthService;
-
-import lombok.RequiredArgsConstructor;
+import static com.heroku.labshare.constant.SecurityConstants.*;
 
 @Configuration
 @EnableWebSecurity
@@ -41,18 +36,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors()
-                .and().authorizeRequests()
-                .antMatchers(HttpMethod.POST, SIGN_UP_URL).permitAll()
-                .antMatchers(HttpMethod.POST, SIGN_OUT_URL).permitAll()
-                .antMatchers(HttpMethod.GET, FETCH_USER).permitAll()
-                .antMatchers(HttpMethod.GET, FETCH_DATA).permitAll()
-                .antMatchers(HttpMethod.POST, SAVE_TASK).permitAll()
-                .anyRequest().authenticated()
-                .and()
-                .addFilter(new JWTAuthenticationFilter(authenticationManager(), mapper, userRepository))
-                .addFilter(new JWTAuthorizationFilter(authenticationManager(), authService))
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and().csrf().disable();
+            .and().authorizeRequests()
+            .antMatchers(HttpMethod.POST, SIGN_UP_URL).permitAll()
+            .antMatchers(HttpMethod.POST, SIGN_OUT_URL).permitAll()
+            .antMatchers(HttpMethod.GET, FETCH_USER).permitAll()
+            .antMatchers(HttpMethod.GET, GET_DATA).permitAll()
+            .antMatchers(HttpMethod.POST, SAVE_TASK).permitAll()
+            .antMatchers(HttpMethod.PUT, INCREASE_LIKE_URL).permitAll()
+            .anyRequest().authenticated()
+            .and()
+            .addFilter(new JWTAuthenticationFilter(authenticationManager(), mapper, userRepository))
+            .addFilter(new JWTAuthorizationFilter(authenticationManager(), authService))
+            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            .and().csrf().disable();
     }
 
     @Override

@@ -11,7 +11,9 @@ public final class SecurityConstants {
     public static final String SIGN_OUT_URL = "/api/auth/logout";
     public static final String FETCH_USER = "/api/auth/fetchUser";
     public static final String SAVE_TASK = "/api/data/save";
-    public static final String FETCH_DATA = "/api/data/**";
+    public static final String GET_DATA = "/api/data/**";
+    public static final String INCREASE_LIKE_URL = "/api/like/increase/**";
+    public static final String DECREASE_LIKE_URL = "/api/like/decrease";
 
     private SecurityConstants() {
     }
