@@ -19,17 +19,17 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String faculty;
-    private String specialty;
+    private Integer faculty;
+    private Integer specialty;
     private String topic;
     private String description;
-    private String subject;
-    private int year;
+    private Integer subject;
+    private Integer year;
     @Column(nullable = false)
     private String filePath;
     private Integer likeCount;
 
-    @ManyToOne()
+    @ManyToOne
     @JoinColumn(name = "userId")
     private User user;
 

@@ -31,8 +31,8 @@ public class User {
     @Column(unique = true)
     private String email;
     private String password;
-    private String faculty;
-    private String specialty;
+    private int faculty;
+    private int specialty;
     @Enumerated(EnumType.STRING)
     private Role role;
 

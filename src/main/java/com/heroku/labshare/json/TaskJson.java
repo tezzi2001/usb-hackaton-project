@@ -14,14 +14,16 @@ import java.io.Serializable;
 public class TaskJson implements Serializable {
 
     private Long id;
-    private String faculty;
-    private String specialty;
+    private int faculty;
+    private int specialty;
     @JsonProperty("title")
     private String topic;
     private String description;
-    private String subject;
+    private int subject;
     private int likeCount;
     private int year;
+    private int[] likedIds = new int[] {1}; // TODO: (mock) refactor
+    private String username;
 
     public TaskJson(Task task) {
         this.id = task.getId();
@@ -32,6 +34,7 @@ public class TaskJson implements Serializable {
         this.subject = task.getSubject();
         this.likeCount = task.getLikeCount();
         this.year = task.getYear();
+        this.username = task.getUser().getUsername();
     }
 
     public Task toTask(String filePath) {

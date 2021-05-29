@@ -48,9 +48,9 @@ public class SearchService {
         List<Task> allTasks = taskRepository.findTasksByTopic(input);
 
         List<Task> filteredTasks = allTasks.stream()
-                .filter(task -> applyFilter(facultyOptionsId, task))
-                .filter(task -> applyFilter(specialityOptionsId, task))
-                .filter(task -> applyFilter(subjectOptionsId, task))
+                .filter(task -> applyFacultyFilter(facultyOptionsId, task))
+                .filter(task -> applySpecialityFilter(specialityOptionsId, task))
+                .filter(task -> applySubjectFilter(subjectOptionsId, task))
                 .collect(Collectors.toList());
 
         return search(filteredTasks);
@@ -64,16 +64,24 @@ public class SearchService {
         List<Task> allTasks = taskRepository.findAll();
 
         List<Task> filteredTasks = allTasks.stream()
-                .filter(task -> applyFilter(facultyOptionsId, task))
-                .filter(task -> applyFilter(specialityOptionsId, task))
-                .filter(task -> applyFilter(subjectOptionsId, task))
+                .filter(task -> applyFacultyFilter(facultyOptionsId, task))
+                .filter(task -> applySpecialityFilter(specialityOptionsId, task))
+                .filter(task -> applySubjectFilter(subjectOptionsId, task))
                 .collect(Collectors.toList());
 
         return search(filteredTasks);
     }
 
-    private boolean applyFilter(List<String> optionsId, Task task) {
-        return optionsId.isEmpty() || optionsId.contains(task.getFaculty());
+    private boolean applyFacultyFilter(List<String> optionsId, Task task) {
+        return optionsId.isEmpty() || optionsId.contains(task.getFaculty().toString());
+    }
+
+    private boolean applySpecialityFilter(List<String> optionsId, Task task) {
+        return optionsId.isEmpty() || optionsId.contains(task.getSpecialty().toString());
+    }
+
+    private boolean applySubjectFilter(List<String> optionsId, Task task) {
+        return optionsId.isEmpty() || optionsId.contains(task.getSubject().toString());
     }
 
     private SearchResponse search(List<Task> allTasks) {
@@ -108,13 +116,13 @@ public class SearchService {
 
     // TODO: refactor
     private Filter[] getOnlyPresentFilters(Filter[] filters, TaskJson[] taskJsons) {
-        Set<String> facultyIdSet = Arrays.stream(taskJsons)
+        Set<Integer> facultyIdSet = Arrays.stream(taskJsons)
                 .map(TaskJson::getFaculty)
                 .collect(Collectors.toSet());
-        Set<String> specialtyIdSet = Arrays.stream(taskJsons)
+        Set<Integer> specialtyIdSet = Arrays.stream(taskJsons)
                 .map(TaskJson::getSpecialty)
                 .collect(Collectors.toSet());
-        Set<String> subjectIdSet = Arrays.stream(taskJsons)
+        Set<Integer> subjectIdSet = Arrays.stream(taskJsons)
                 .map(TaskJson::getSubject)
                 .collect(Collectors.toSet());
 
@@ -135,17 +143,17 @@ public class SearchService {
         return filters;
     }
 
-    private void changeFilter(Filter filter, Set<String> idSet) {
+    private void changeFilter(Filter filter, Set<Integer> idSet) {
         Option[] options = filter.getOptions();
         Option[] newOptions = getOnlyPresentOptions(options, idSet);
         filter.setOptions(newOptions);
     }
 
-    private Option[] getOnlyPresentOptions(Option[] options, Set<String> presentOptionIds)  {
+    private Option[] getOnlyPresentOptions(Option[] options, Set<Integer> presentOptionIds)  {
         List<Option> newOptions = new ArrayList<>();
         Arrays.stream(options)
                 .forEach(option -> {
-                    if (presentOptionIds.contains(option.getId().toString())) {
+                    if (presentOptionIds.contains(option.getId())) {
                         newOptions.add(option);
                     }
                 });
