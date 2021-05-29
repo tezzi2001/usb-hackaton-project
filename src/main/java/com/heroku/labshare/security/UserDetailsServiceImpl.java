@@ -1,7 +1,7 @@
 package com.heroku.labshare.security;
 
-import com.heroku.labshare.repository.UserRepository;
 import com.heroku.labshare.model.User;
+import com.heroku.labshare.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

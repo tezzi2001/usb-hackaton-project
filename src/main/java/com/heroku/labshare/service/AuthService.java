@@ -29,7 +29,7 @@ public class AuthService {
     public void saveDto(UserJson userJson) {
         Optional<User> optionalUser = userRepository.findByUsername(userJson.getUsername());
 
-        if (optionalUser.isEmpty()) {
+        if (!optionalUser.isPresent()) {
             String encodedPassword = passwordEncoder.encode(userJson.getPassword());
 
             // TODO: refactor
