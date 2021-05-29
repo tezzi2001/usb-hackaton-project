@@ -1,5 +1,17 @@
 package com.heroku.labshare.service;
 
+import java.io.IOException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
+import javax.persistence.EntityNotFoundException;
+
+import lombok.SneakyThrows;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.dropbox.core.DbxException;
 import com.dropbox.core.v2.DbxClientV2;
 import com.heroku.labshare.json.TaskJson;
@@ -10,14 +22,6 @@ import com.heroku.labshare.model.User;
 import com.heroku.labshare.repository.TaskRepository;
 import com.heroku.labshare.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -64,5 +68,13 @@ public class DataService {
         User user = userRepository.findById(id).orElseThrow();
         user.setRole(Role.APPROVED_USER);
         userRepository.save(user);
+    }
+
+    @SneakyThrows
+    public String createDownloadLinkByTaskId(Long id) {
+        Task task = taskRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User not found by id " + id));
+        String filePath = task.getFilePath();
+        return dbxClient.files().getTemporaryLink(filePath).getLink();
     }
 }

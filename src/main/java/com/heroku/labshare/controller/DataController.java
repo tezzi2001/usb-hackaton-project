@@ -4,6 +4,8 @@ import com.heroku.labshare.json.TaskJson;
 import com.heroku.labshare.service.DataService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import com.heroku.labshare.config.JsonConfig;
@@ -42,4 +44,9 @@ public class DataController {
         return jsonConfig.getSubjects();
     }
 
+    @GetMapping("/downloadLink")
+    public ResponseEntity<String> getDownloadLink(@RequestParam Long id) {
+        String downloadLink = dataService.createDownloadLinkByTaskId(id);
+        return new ResponseEntity<>(downloadLink, HttpStatus.OK);
+    }
 }
