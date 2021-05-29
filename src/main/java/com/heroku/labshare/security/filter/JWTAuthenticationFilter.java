@@ -4,13 +4,15 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.heroku.labshare.dto.UserJson;
-import com.heroku.labshare.json.wrapper.TokenWrapper;
-import com.heroku.labshare.json.wrapper.UserJsonWrapper;
+import com.heroku.labshare.json.wrapper.TokenWithUserWrapper;
+import com.heroku.labshare.model.User;
+import com.heroku.labshare.repository.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.servlet.FilterChain;
@@ -19,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Optional;
 
 import static com.heroku.labshare.constant.SecurityConstants.*;
 
@@ -26,22 +29,24 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     private final AuthenticationManager authenticationManager;
     private final ObjectMapper mapper;
+    private final UserRepository userRepository;
 
-    public JWTAuthenticationFilter(AuthenticationManager authenticationManager, ObjectMapper mapper) {
+    public JWTAuthenticationFilter(AuthenticationManager authenticationManager, ObjectMapper mapper, UserRepository userRepository) {
         this.authenticationManager = authenticationManager;
         this.mapper = mapper;
+        this.userRepository = userRepository;
         setFilterProcessesUrl(SIGN_IN_URL);
     }
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest req, HttpServletResponse res) {
         try {
-            UserJsonWrapper userJsonWrapper = mapper.readValue(req.getInputStream(), UserJsonWrapper.class);
-            UserJson user = userJsonWrapper.getUserJson();
+            UserJson user = mapper.readValue(req.getInputStream(), UserJson.class);
 
+            String username = userRepository.findByEmail(user.getEmail()).get().getUsername(); //TODO: fix
             return authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
-                            user.getUsername(),
+                            username,
                             user.getPassword(),
                             new ArrayList<>())
             );
@@ -62,7 +67,16 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .sign(Algorithm.HMAC512(SECRET.getBytes()));
 
 
-        res.getWriter().write(mapper.writeValueAsString(new TokenWrapper(token)));
+        Optional<User> optionalUser = userRepository.findByUsername(username);
+        User user = optionalUser.get();
+        TokenWithUserWrapper tokenWithUserWrapper = TokenWithUserWrapper.builder()
+                .token(token)
+                .email(user.getEmail())
+                .username(user.getUsername())
+                .faculty(user.getFaculty())
+                .specialty(user.getSpecialty())
+                .build();
+        res.getWriter().write(mapper.writeValueAsString(tokenWithUserWrapper));
         res.getWriter().flush();
     }
 }

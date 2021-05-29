@@ -9,6 +9,7 @@ public final class SecurityConstants {
     public static final String SIGN_UP_URL = "/api/auth/register";
     public static final String SIGN_IN_URL = "/api/auth/login";
     public static final String SIGN_OUT_URL = "/api/auth/logout";
+    public static final String FETCH_USER = "/api/auth/fetchUser";
 
     private SecurityConstants() {
     }

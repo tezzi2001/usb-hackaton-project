@@ -1,11 +1,9 @@
 package com.heroku.labshare.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.heroku.labshare.dto.UserJson;
-import com.heroku.labshare.json.wrapper.UserJsonWrapper;
 import com.heroku.labshare.service.AuthService;
+import com.heroku.labshare.service.UserService;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.springframework.web.bind.annotation.*;
 
 import static com.heroku.labshare.constant.SecurityConstants.TOKEN_PREFIX;
@@ -16,18 +14,22 @@ import static com.heroku.labshare.constant.SecurityConstants.TOKEN_PREFIX;
 public class AuthController {
 
     private final AuthService authService;
-    private final ObjectMapper mapper;
+    private final UserService userService;
 
     @PostMapping("/register")
-    @SneakyThrows
-    public void register(@RequestBody String json) {
-        UserJsonWrapper userJsonWrapper = mapper.readValue(json, UserJsonWrapper.class);
-        authService.saveDto(userJsonWrapper.getUserJson());
+    public void register(@RequestBody UserJson userJson) {
+        authService.saveDto(userJson);
     }
 
     @PostMapping("/logout")
     public void logout(@RequestHeader("authorization") String authorization) {
         String token = authorization.replace(TOKEN_PREFIX, "");
         authService.logout(token);
+    }
+
+    @GetMapping("/fetchUser")
+    public UserJson fetchUser(@RequestHeader("authorization") String authorization) {
+        String token = authorization.replace(TOKEN_PREFIX, "");
+        return userService.getUserInfo(token);
     }
 }
