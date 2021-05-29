@@ -10,6 +10,8 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import javax.sql.DataSource;
 import java.net.URI;
 
+import static com.heroku.labshare.constant.EnvironmentVariableNames.DATABASE_URL;
+
 @Configuration
 @Profile("prod")
 public class ProdDataConfig {
@@ -20,7 +22,7 @@ public class ProdDataConfig {
     @Bean
     @SneakyThrows
     public DataSource dataSource() {
-        String databaseUrl = System.getenv("DATABASE_URL");
+        String databaseUrl = System.getenv(DATABASE_URL);
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         // fixes error on connecting to Heroku Postgres
         databaseUrl += "?useUnicode=true&amp;characterEncoding=UTF-8";

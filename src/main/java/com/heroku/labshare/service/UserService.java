@@ -1,7 +1,7 @@
 package com.heroku.labshare.service;
 
 import com.auth0.jwt.JWT;
-import com.heroku.labshare.dto.UserJson;
+import com.heroku.labshare.json.UserJson;
 import com.heroku.labshare.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

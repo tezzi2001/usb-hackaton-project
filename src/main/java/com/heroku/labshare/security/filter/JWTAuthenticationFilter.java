@@ -3,7 +3,7 @@ package com.heroku.labshare.security.filter;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.heroku.labshare.dto.UserJson;
+import com.heroku.labshare.json.UserJson;
 import com.heroku.labshare.json.wrapper.TokenWithUserWrapper;
 import com.heroku.labshare.model.User;
 import com.heroku.labshare.repository.UserRepository;
@@ -12,7 +12,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.servlet.FilterChain;
