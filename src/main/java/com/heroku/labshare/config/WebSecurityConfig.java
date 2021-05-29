@@ -20,8 +20,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import static com.heroku.labshare.constant.SecurityConstants.SIGN_OUT_URL;
-import static com.heroku.labshare.constant.SecurityConstants.SIGN_UP_URL;
+import static com.heroku.labshare.constant.SecurityConstants.*;
 
 @Configuration
 @EnableWebSecurity
@@ -40,6 +39,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().authorizeRequests()
                 .antMatchers(HttpMethod.POST, SIGN_UP_URL).permitAll()
                 .antMatchers(HttpMethod.POST, SIGN_OUT_URL).permitAll()
+                .antMatchers(HttpMethod.GET, FETCH_USER).permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilter(new JWTAuthenticationFilter(authenticationManager(), mapper, userRepository))
