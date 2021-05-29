@@ -10,7 +10,7 @@ import com.heroku.labshare.service.UserService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/like")
+@RequestMapping("/api/data/like")
 @RequiredArgsConstructor
 public class LikeController {
 
