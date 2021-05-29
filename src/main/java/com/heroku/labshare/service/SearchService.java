@@ -41,11 +41,27 @@ public class SearchService {
     }
 
     public SearchResponse search(String input, MultiValueMap<String, String> filters) {
-        return null;
+        List<String> facultyOptionsId = getFiltersOrEmpty(filters, FACULTY);
+        List<String> specialityOptionsId = getFiltersOrEmpty(filters, SPECIALITY);
+        List<String> subjectOptionsId = getFiltersOrEmpty(filters, SUBJECT);
+
+        List<Task> allTasks = taskRepository.findTasksByTopic(input);
+
+        List<Task> filteredTasks = allTasks.stream()
+                .filter(task -> applyFilter(facultyOptionsId, task))
+                .filter(task -> applyFilter(specialityOptionsId, task))
+                .filter(task -> applyFilter(subjectOptionsId, task))
+                .collect(Collectors.toList());
+
+        return search(filteredTasks);
     }
 
     public SearchResponse search(MultiValueMap<String, String> filters) {
         return null;
+    }
+
+    private boolean applyFilter(List<String> optionsId, Task task) {
+        return optionsId.isEmpty() || optionsId.contains(task.getFaculty());
     }
 
     private SearchResponse search(List<Task> allTasks) {
@@ -122,5 +138,12 @@ public class SearchService {
                     }
                 });
         return newOptions.toArray(new Option[0]);
+    }
+
+    private List<String> getFiltersOrEmpty(MultiValueMap<String, String> filters, String filterId) {
+        List<String> certainFilters = filters.get(filterId);
+        return certainFilters == null ?
+                new ArrayList<>() :
+                certainFilters;
     }
 }
