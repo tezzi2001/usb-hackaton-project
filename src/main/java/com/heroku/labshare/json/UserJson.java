@@ -14,7 +14,6 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class UserJson implements Serializable {
 
-    @JsonIgnore
     private Long id;
     private boolean isApproved;
     private String username;

@@ -2,6 +2,7 @@ package com.heroku.labshare.json;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.heroku.labshare.model.Task;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,6 +14,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class TaskJson implements Serializable {
 
+    private Long id;
     private String faculty;
     private String specialty;
     @JsonProperty("title")
@@ -23,13 +25,14 @@ public class TaskJson implements Serializable {
 
     public Task toTask(String filePath) {
         return Task.builder()
-                .year(year)
-                .description(this.description)
-                .faculty(this.faculty)
-                .topic(this.topic)
-                .subject(this.subject)
-                .specialty(this.specialty)
-                .filePath(filePath)
-                .build();
+            .id(id)
+            .year(year)
+            .description(this.description)
+            .faculty(this.faculty)
+            .topic(this.topic)
+            .subject(this.subject)
+            .specialty(this.specialty)
+            .filePath(filePath)
+            .build();
     }
 }
