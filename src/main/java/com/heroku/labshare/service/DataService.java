@@ -1,8 +1,18 @@
 package com.heroku.labshare.service;
 
+import java.io.IOException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
+import javax.persistence.EntityNotFoundException;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.dropbox.core.DbxException;
 import com.dropbox.core.v2.DbxClientV2;
-import com.heroku.labshare.exception.EntityNotFoundException;
 import com.heroku.labshare.json.TaskJson;
 import com.heroku.labshare.json.UserJson;
 import com.heroku.labshare.model.Role;
@@ -10,15 +20,8 @@ import com.heroku.labshare.model.Task;
 import com.heroku.labshare.model.User;
 import com.heroku.labshare.repository.TaskRepository;
 import com.heroku.labshare.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -44,10 +47,11 @@ public class DataService {
                 String path = DELIMITER + id + DELIMITER + System.currentTimeMillis() + file.getOriginalFilename();
 
                 dbxClient.files()
-                        .upload(path)
-                        .uploadAndFinish(file.getInputStream());
+                    .upload(path)
+                    .uploadAndFinish(file.getInputStream());
                 Task task = taskJson.toTask(path);
-                User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(User.class, id));
+                User user = userRepository.findById(id)
+                    .orElseThrow(() -> new EntityNotFoundException("User not found by id " + id));
                 task.setUser(user);
                 taskRepository.save(task);
             } catch (DbxException | IOException e) {
@@ -62,7 +66,8 @@ public class DataService {
     }
 
     private void approve(Long id) {
-        User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(User.class, id));
+        User user = userRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("User not found by id " + id));
         user.setRole(Role.APPROVED_USER);
         userRepository.save(user);
     }

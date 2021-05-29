@@ -36,18 +36,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors()
-                .and().authorizeRequests()
-                .antMatchers(HttpMethod.POST, SIGN_UP_URL).permitAll()
-                .antMatchers(HttpMethod.POST, SIGN_OUT_URL).permitAll()
-                .antMatchers(HttpMethod.GET, FETCH_USER).permitAll()
-                .antMatchers(HttpMethod.GET, FETCH_DATA).permitAll()
-                .antMatchers(HttpMethod.POST, SAVE_TASK).permitAll()
-                .anyRequest().authenticated()
-                .and()
-                .addFilter(new JWTAuthenticationFilter(authenticationManager(), mapper, userRepository))
-                .addFilter(new JWTAuthorizationFilter(authenticationManager(), authService))
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and().csrf().disable();
+            .and().authorizeRequests()
+            .antMatchers(HttpMethod.POST, SIGN_UP_URL).permitAll()
+            .antMatchers(HttpMethod.POST, SIGN_OUT_URL).permitAll()
+            .antMatchers(HttpMethod.GET, FETCH_USER).permitAll()
+            .antMatchers(HttpMethod.GET, GET_DATA).permitAll()
+            .antMatchers(HttpMethod.POST, SAVE_TASK).permitAll()
+            .antMatchers(HttpMethod.PUT, INCREASE_LIKE_URL).permitAll()
+            .anyRequest().authenticated()
+            .and()
+            .addFilter(new JWTAuthenticationFilter(authenticationManager(), mapper, userRepository))
+            .addFilter(new JWTAuthorizationFilter(authenticationManager(), authService))
+            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            .and().csrf().disable();
     }
 
     @Override
