@@ -1,6 +1,7 @@
 package com.heroku.labshare.json;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.heroku.labshare.model.Role;
 import com.heroku.labshare.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,6 +16,7 @@ public class UserJson implements Serializable {
 
     @JsonIgnore
     private Long id;
+    private boolean isApproved;
     private String username;
     private String email;
     private String password;
@@ -23,6 +25,7 @@ public class UserJson implements Serializable {
 
     public UserJson(User user) {
         this.id = user.getId();
+        this.isApproved = user.getRole() == Role.APPROVED_USER;
         this.username = user.getUsername();
         this.email = user.getEmail();
         this.faculty = user.getFaculty();
