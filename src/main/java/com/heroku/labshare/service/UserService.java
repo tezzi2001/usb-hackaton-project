@@ -49,12 +49,11 @@ public class UserService {
             .orElseThrow(() -> new EntityNotFoundException("Task not found by id " + userId));
 
         Long[] likedIds = currentUser.getLikedIDs();
-        for (Long likedId : likedIds) {
-            if (taskId.equals(likedId)) {
-                throw new Exception("Task already liked");
-            }
-        }
-
+//        for (Long likedId : likedIds) {
+//            if (taskId.equals(likedId)) {
+//                throw new Exception("Task already liked");
+//            }
+//        }
         likedIds = Arrays.copyOf(likedIds, likedIds.length + 1);
         likedIds[likedIds.length - 1] = taskId;
         currentUser.setLikedIDs(likedIds);

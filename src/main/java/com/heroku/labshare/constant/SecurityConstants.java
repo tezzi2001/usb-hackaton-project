@@ -12,8 +12,8 @@ public final class SecurityConstants {
     public static final String FETCH_USER = "/api/auth/fetchUser";
     public static final String SAVE_TASK = "/api/data/save";
     public static final String GET_DATA = "/api/data/**";
-    public static final String INCREASE_LIKE_URL = "/api/like/increase/**";
-    public static final String DECREASE_LIKE_URL = "/api/like/decrease";
+    public static final String INCREASE_LIKE_URL = "/api/data/like/increase";
+    public static final String DECREASE_LIKE_URL = "/api/data/like/decrease";
 
     private SecurityConstants() {
     }

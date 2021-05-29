@@ -2,6 +2,7 @@ package com.heroku.labshare.json;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.heroku.labshare.model.Task;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
