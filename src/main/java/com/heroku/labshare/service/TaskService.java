@@ -14,6 +14,6 @@ public class TaskService {
     private final TaskRepository taskRepository;
 
     public Task getTaskById(Long id) {
-        return taskRepository.getById(id);
+        return taskRepository.findById(id).get();
     }
 }
