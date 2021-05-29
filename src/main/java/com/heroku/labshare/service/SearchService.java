@@ -57,7 +57,19 @@ public class SearchService {
     }
 
     public SearchResponse search(MultiValueMap<String, String> filters) {
-        return null;
+        List<String> facultyOptionsId = getFiltersOrEmpty(filters, FACULTY);
+        List<String> specialityOptionsId = getFiltersOrEmpty(filters, SPECIALITY);
+        List<String> subjectOptionsId = getFiltersOrEmpty(filters, SUBJECT);
+
+        List<Task> allTasks = taskRepository.findAll();
+
+        List<Task> filteredTasks = allTasks.stream()
+                .filter(task -> applyFilter(facultyOptionsId, task))
+                .filter(task -> applyFilter(specialityOptionsId, task))
+                .filter(task -> applyFilter(subjectOptionsId, task))
+                .collect(Collectors.toList());
+
+        return search(filteredTasks);
     }
 
     private boolean applyFilter(List<String> optionsId, Task task) {
