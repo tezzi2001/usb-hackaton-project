@@ -1,5 +1,7 @@
 package com.heroku.labshare.model;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,4 +27,7 @@ public class User {
     private String specialty;
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @OneToMany()
+    private List<Task> tasks;
 }
