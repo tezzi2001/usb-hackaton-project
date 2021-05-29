@@ -2,19 +2,26 @@ package com.heroku.labshare.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.heroku.labshare.config.JsonConfig;
+import com.heroku.labshare.json.SearchResponse;
 import com.heroku.labshare.json.TaskJson;
 import com.heroku.labshare.json.faculty.Faculty;
 import com.heroku.labshare.json.specialty.Specialty;
 import com.heroku.labshare.json.subject.Subject;
 import com.heroku.labshare.service.DataService;
+import com.heroku.labshare.service.SearchService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.MediaType;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import lombok.SneakyThrows;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import static com.heroku.labshare.constant.FiltersNames.getFiltersNames;
 import static com.heroku.labshare.constant.SecurityConstants.TOKEN_PREFIX;
 
 @RestController
@@ -23,6 +30,7 @@ import static com.heroku.labshare.constant.SecurityConstants.TOKEN_PREFIX;
 public class DataController {
 
     private final DataService dataService;
+    private final SearchService searchService;
     private final JsonConfig jsonConfig;
     private final ObjectMapper mapper;
 
@@ -53,5 +61,25 @@ public class DataController {
     public ResponseEntity<String> getDownloadLink(@RequestParam Long id) {
         String downloadLink = dataService.createDownloadLinkByTaskId(id);
         return new ResponseEntity<>(downloadLink, HttpStatus.OK);
+    }
+
+    @GetMapping("/search")
+    public SearchResponse search(@RequestParam MultiValueMap<String, String> query) {
+        List<String> inputAsList = query.remove("input");
+        filterQuery(query);
+
+        if (inputAsList.isEmpty()) {
+            return query.isEmpty() ? searchService.search() : searchService.search(query);
+        } else {
+            String input = inputAsList.get(0);
+            return query.isEmpty() ? searchService.search(input) : searchService.search(input, query);
+        }
+    }
+
+    private void filterQuery(MultiValueMap<String, String> query) {
+        Set<String> excludeKeySet = query.keySet().stream()
+                .filter(key -> !getFiltersNames().contains(key))
+                .collect(Collectors.toSet());
+        excludeKeySet.forEach(query::remove);
     }
 }
