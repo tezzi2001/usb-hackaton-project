@@ -1,6 +1,7 @@
 package com.heroku.labshare.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.heroku.labshare.repository.UserRepository;
 import com.heroku.labshare.security.filter.JWTAuthenticationFilter;
 import com.heroku.labshare.security.filter.JWTAuthorizationFilter;
 import com.heroku.labshare.service.AuthService;
@@ -19,8 +20,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import static com.heroku.labshare.constant.SecurityConstants.SIGN_OUT_URL;
-import static com.heroku.labshare.constant.SecurityConstants.SIGN_UP_URL;
+import static com.heroku.labshare.constant.SecurityConstants.*;
 
 @Configuration
 @EnableWebSecurity
@@ -31,6 +31,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final AuthService authService;
     private final PasswordEncoder passwordEncoder;
     private final ObjectMapper mapper;
+    private final UserRepository userRepository;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -38,9 +39,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().authorizeRequests()
                 .antMatchers(HttpMethod.POST, SIGN_UP_URL).permitAll()
                 .antMatchers(HttpMethod.POST, SIGN_OUT_URL).permitAll()
+                .antMatchers(HttpMethod.GET, FETCH_USER).permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .addFilter(new JWTAuthenticationFilter(authenticationManager(), mapper))
+                .addFilter(new JWTAuthenticationFilter(authenticationManager(), mapper, userRepository))
                 .addFilter(new JWTAuthorizationFilter(authenticationManager(), authService))
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().csrf().disable();
