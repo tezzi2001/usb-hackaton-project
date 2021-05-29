@@ -19,17 +19,19 @@ public class TaskJson implements Serializable {
     private String topic;
     private String description;
     private String subject;
+    private int likeCount;
     private int year;
 
     public Task toTask(String filePath) {
         return Task.builder()
-                .year(year)
+                .year(this.year)
                 .description(this.description)
                 .faculty(this.faculty)
                 .topic(this.topic)
                 .subject(this.subject)
                 .specialty(this.specialty)
                 .filePath(filePath)
+                .likeCount(this.likeCount)
                 .build();
     }
 }
