@@ -19,8 +19,7 @@ public class LikeController {
     private final UserService userService;
 
     @PutMapping("/increase")
-    public ResponseEntity<?> likeTask(@RequestParam Long userId, @RequestParam Long taskId) {
+    public void likeTask(@RequestParam Long userId, @RequestParam Long taskId) {
         userService.likeTask(userId, taskId);
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
