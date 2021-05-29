@@ -7,6 +7,7 @@ import java.util.concurrent.TimeUnit;
 
 import javax.persistence.EntityNotFoundException;
 
+import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -70,5 +71,13 @@ public class DataService {
             .orElseThrow(() -> new EntityNotFoundException("User not found by id " + id));
         user.setRole(Role.APPROVED_USER);
         userRepository.save(user);
+    }
+
+    @SneakyThrows
+    public String createDownloadLinkByTaskId(Long id) {
+        Task task = taskRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User not found by id " + id));
+        String filePath = task.getFilePath();
+        return dbxClient.files().getTemporaryLink(filePath).getLink();
     }
 }
