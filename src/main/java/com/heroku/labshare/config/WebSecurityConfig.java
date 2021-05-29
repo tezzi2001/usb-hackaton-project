@@ -1,5 +1,6 @@
 package com.heroku.labshare.config;
 
+import static com.heroku.labshare.constant.SecurityConstants.FETCH_DATA;
 import static com.heroku.labshare.constant.SecurityConstants.FETCH_USER;
 import static com.heroku.labshare.constant.SecurityConstants.SIGN_OUT_URL;
 import static com.heroku.labshare.constant.SecurityConstants.SIGN_UP_URL;
@@ -45,7 +46,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers(HttpMethod.POST, SIGN_UP_URL).permitAll()
             .antMatchers(HttpMethod.POST, SIGN_OUT_URL).permitAll()
             .antMatchers(HttpMethod.GET, FETCH_USER).permitAll()
-            .antMatchers(HttpMethod.GET, "/api/filter/**").permitAll()
+            .antMatchers(HttpMethod.GET, FETCH_DATA).permitAll()
             .anyRequest().authenticated()
             .and()
             .addFilter(new JWTAuthenticationFilter(authenticationManager(), mapper, userRepository))
