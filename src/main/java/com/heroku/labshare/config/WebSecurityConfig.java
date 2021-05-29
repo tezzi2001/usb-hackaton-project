@@ -4,7 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.heroku.labshare.security.filter.JWTAuthenticationFilter;
 import com.heroku.labshare.security.filter.JWTAuthorizationFilter;
 import com.heroku.labshare.service.AuthService;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -35,15 +37,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors()
-                .and().authorizeRequests()
-                .antMatchers(HttpMethod.POST, SIGN_UP_URL).permitAll()
-                .antMatchers(HttpMethod.POST, SIGN_OUT_URL).permitAll()
-                .anyRequest().authenticated()
-                .and()
-                .addFilter(new JWTAuthenticationFilter(authenticationManager(), mapper))
-                .addFilter(new JWTAuthorizationFilter(authenticationManager(), authService))
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and().csrf().disable();
+            .and().authorizeRequests()
+            .antMatchers(HttpMethod.POST, SIGN_UP_URL).permitAll()
+            .antMatchers(HttpMethod.POST, SIGN_OUT_URL).permitAll()
+            .antMatchers(HttpMethod.GET, "/api/filter/**").permitAll()
+            .anyRequest().authenticated()
+            .and()
+            .addFilter(new JWTAuthenticationFilter(authenticationManager(), mapper))
+            .addFilter(new JWTAuthorizationFilter(authenticationManager(), authService))
+            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            .and().csrf().disable();
     }
 
     @Override
