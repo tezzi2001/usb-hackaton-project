@@ -31,7 +31,7 @@ public class DataService {
             try {
                 UserJson userInfo = userService.getUserInfo(token);
                 Long id = userInfo.getId();
-                String path = DELIMITER + id + DELIMITER + file.getOriginalFilename();
+                String path = DELIMITER + id + DELIMITER + System.currentTimeMillis() + file.getOriginalFilename();
                 dbxClient.files()
                         .upload(path)
                         .uploadAndFinish(file.getInputStream());

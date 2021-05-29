@@ -1,12 +1,11 @@
 package com.heroku.labshare.model;
 
-import java.util.List;
-
-import javax.persistence.*;
-
 import lombok.Builder;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
+
+import javax.persistence.*;
+import java.util.List;
 
 @Data
 @Entity(name = "tasks")
