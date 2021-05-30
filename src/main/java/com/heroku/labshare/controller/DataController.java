@@ -1,7 +1,6 @@
 package com.heroku.labshare.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.heroku.labshare.config.JsonConfig;
 import com.heroku.labshare.json.SearchResponse;
 import com.heroku.labshare.json.TaskJson;
 import com.heroku.labshare.json.faculty.Faculty;
@@ -35,7 +34,9 @@ public class DataController {
 
     private final DataService dataService;
     private final SearchService searchService;
-    private final JsonConfig jsonConfig;
+    private final Faculty[] faculties;
+    private final Specialty[] specialties;
+    private final Subject[] subjects;
     private final ObjectMapper mapper;
     private final UserService userService;
     private final TaskService taskService;
@@ -51,17 +52,17 @@ public class DataController {
 
     @GetMapping("/faculty")
     public Faculty[] getFaculties() {
-        return jsonConfig.getFaculties();
+        return faculties;
     }
 
     @GetMapping("/specialty")
     public Specialty[] getSpecialties() {
-        return jsonConfig.getSpecialties();
+        return specialties;
     }
 
     @GetMapping("/subject")
     public Subject[] getSubjects() {
-        return jsonConfig.getSubjects();
+        return subjects;
     }
 
     @GetMapping("/downloadLink")
