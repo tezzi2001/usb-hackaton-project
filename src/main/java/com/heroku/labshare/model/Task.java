@@ -18,7 +18,6 @@ public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private Integer faculty;
     private Integer specialty;
     private String topic;
@@ -27,19 +26,19 @@ public class Task {
     private Integer year;
     @Column(nullable = false)
     private String filePath;
-    private Integer likeCount;
 
     @ManyToOne
-    @JoinColumn(name = "userId")
+    @JoinColumn(name = "user_id")
     private User user;
 
     @OneToMany(mappedBy = "task")
     private List<Report> reports;
 
-    @PrePersist
-    public void prePersist() {
-        if(likeCount == null) {
-            likeCount = 0;
-        }
-    }
+    @ManyToMany
+    @JoinTable(
+            name = "tasks_users_likes",
+            joinColumns = @JoinColumn(name = "task_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private List<User> likedUsers;
 }

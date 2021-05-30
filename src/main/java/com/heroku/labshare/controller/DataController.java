@@ -91,9 +91,9 @@ public class DataController {
         excludeKeySet.forEach(query::remove);
     }
 
-    @PutMapping("/like/increase")
+    @PutMapping("/like")
     public void likeTask(@RequestBody TaskIdWithUserIdWrapper wrapper) {
-        userService.likeTask(wrapper.getUserId(), wrapper.getTaskId());
+        userService.like(wrapper.getUserId(), wrapper.getTaskId());
     }
 
     @GetMapping("/fetchTask")

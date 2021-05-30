@@ -2,6 +2,7 @@ package com.heroku.labshare.json;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.heroku.labshare.model.Task;
+import com.heroku.labshare.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,9 +21,8 @@ public class TaskJson implements Serializable {
     private String topic;
     private String description;
     private int subject;
-    private int likeCount;
     private int year;
-    private int[] likedIds = new int[] {1}; // TODO: (mock) refactor
+    private Long[] likedIds;
     private String username;
 
     public TaskJson(Task task) {
@@ -32,8 +32,10 @@ public class TaskJson implements Serializable {
         this.topic = task.getTopic();
         this.description = task.getDescription();
         this.subject = task.getSubject();
-        this.likeCount = task.getLikeCount();
         this.year = task.getYear();
+        this.likedIds = task.getLikedUsers().stream()
+                .map(User::getId)
+                .toArray(Long[]::new);
         this.username = task.getUser().getUsername();
     }
 
@@ -47,7 +49,6 @@ public class TaskJson implements Serializable {
                 .subject(this.subject)
                 .specialty(this.specialty)
                 .filePath(filePath)
-                .likeCount(this.likeCount)
                 .build();
     }
 }

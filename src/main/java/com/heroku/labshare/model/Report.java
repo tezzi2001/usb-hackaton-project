@@ -14,7 +14,7 @@ public class Report {
     private String cause;
     private String description;
 
-    @ManyToOne()
-    @JoinColumn(name = "taskId")
+    @ManyToOne
+    @JoinColumn(name = "task_id")
     private Task task;
 }
