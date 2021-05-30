@@ -77,7 +77,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .username(user.getUsername())
                 .faculty(user.getFaculty())
                 .specialty(user.getSpecialty())
-                .userId(user.getId())
+                .id(user.getId())
                 .isApproved(Role.APPROVED_USER == user.getRole())
                 .build();
         res.getWriter().write(mapper.writeValueAsString(tokenWithUserWrapper));
