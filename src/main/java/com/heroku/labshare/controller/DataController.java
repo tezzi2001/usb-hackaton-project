@@ -7,10 +7,7 @@ import com.heroku.labshare.json.faculty.Faculty;
 import com.heroku.labshare.json.specialty.Specialty;
 import com.heroku.labshare.json.subject.Subject;
 import com.heroku.labshare.json.wrapper.TaskIdWithUserIdWrapper;
-import com.heroku.labshare.service.DataService;
-import com.heroku.labshare.service.SearchService;
-import com.heroku.labshare.service.TaskService;
-import com.heroku.labshare.service.UserService;
+import com.heroku.labshare.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.http.HttpStatus;
@@ -34,6 +31,7 @@ public class DataController {
 
     private final DataService dataService;
     private final SearchService searchService;
+    private final AdvancedSearchService advancedSearchService;
     private final Faculty[] faculties;
     private final Specialty[] specialties;
     private final Subject[] subjects;
@@ -81,6 +79,19 @@ public class DataController {
         } else {
             String input = inputAsList.get(0);
             return query.isEmpty() ? searchService.search(input) : searchService.search(input, query);
+        }
+    }
+
+    @GetMapping("/advanced/search")
+    public SearchResponse advancedSearch(@RequestParam MultiValueMap<String, String> query) {
+        List<String> inputAsList = query.remove("input");
+        filterQuery(query);
+
+        if (inputAsList == null || inputAsList.isEmpty()) {
+            return query.isEmpty() ? searchService.search() : searchService.search(query);
+        } else {
+            String input = inputAsList.get(0);
+            return query.isEmpty() ? advancedSearchService.search(input) : advancedSearchService.search(input, query);
         }
     }
 
