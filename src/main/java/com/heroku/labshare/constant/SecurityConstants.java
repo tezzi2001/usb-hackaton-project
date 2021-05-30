@@ -20,6 +20,8 @@ public final class SecurityConstants {
     public static final String SEARCH_URL = "/api/data/search";
     public static final String LIKE_URL = "/api/data/like";
     public static final String FETCH_TASK_URL = "/api/auth/fetchTask";
+    public static final String ADVANCED_SEARCH_URL = "/api/data/advanced/search";
+    public static final String CRAWLER_URL = "/api/data/advanced/crawler";
 
     private SecurityConstants() {
     }
