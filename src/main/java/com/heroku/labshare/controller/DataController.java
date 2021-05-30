@@ -19,6 +19,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -50,18 +51,18 @@ public class DataController {
     }
 
     @GetMapping("/faculty")
-    public Faculty[] getFaculties() {
-        return faculties;
+    public List<Faculty> getFaculties() {
+        return Arrays.asList(faculties.clone());
     }
 
     @GetMapping("/specialty")
-    public Specialty[] getSpecialties() {
-        return specialties;
+    public List<Specialty> getSpecialties() {
+        return Arrays.asList(specialties.clone());
     }
 
     @GetMapping("/subject")
-    public Subject[] getSubjects() {
-        return subjects;
+    public List<Subject> getSubjects() {
+        return Arrays.asList(subjects.clone());
     }
 
     @GetMapping("/downloadLink")
