@@ -58,6 +58,6 @@ public class AuthService {
 
     public boolean canAuthorize(String token) {
         String signature = JWT.decode(token).getSignature();
-        return jwtBlacklistRepository.existsBySignature(signature);
+        return !jwtBlacklistRepository.existsBySignature(signature);
     }
 }
