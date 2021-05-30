@@ -72,15 +72,15 @@ public class SearchService {
         return search(filteredTasks);
     }
 
-    private boolean applyFacultyFilter(List<String> optionsId, Task task) {
+    boolean applyFacultyFilter(List<String> optionsId, Task task) {
         return optionsId.isEmpty() || optionsId.contains(task.getFaculty().toString());
     }
 
-    private boolean applySpecialityFilter(List<String> optionsId, Task task) {
+    boolean applySpecialityFilter(List<String> optionsId, Task task) {
         return optionsId.isEmpty() || optionsId.contains(task.getSpecialty().toString());
     }
 
-    private boolean applySubjectFilter(List<String> optionsId, Task task) {
+    boolean applySubjectFilter(List<String> optionsId, Task task) {
         return optionsId.isEmpty() || optionsId.contains(task.getSubject().toString());
     }
 
@@ -93,7 +93,7 @@ public class SearchService {
     }
 
     //TODO: refactor
-    private Filter[] getAllFilters() {
+    Filter[] getAllFilters() {
         Filter[] filters = new Filter[3];
 
         Option[] facultyOptions = Arrays.stream(faculties)
@@ -115,7 +115,7 @@ public class SearchService {
     }
 
     // TODO: refactor
-    private Filter[] getOnlyPresentFilters(Filter[] filters, TaskJson[] taskJsons) {
+    Filter[] getOnlyPresentFilters(Filter[] filters, TaskJson[] taskJsons) {
         Set<Integer> facultyIdSet = Arrays.stream(taskJsons)
                 .map(TaskJson::getFaculty)
                 .collect(Collectors.toSet());
@@ -160,7 +160,7 @@ public class SearchService {
         return newOptions.toArray(new Option[0]);
     }
 
-    private List<String> getFiltersOrEmpty(MultiValueMap<String, String> filters, String filterId) {
+    List<String> getFiltersOrEmpty(MultiValueMap<String, String> filters, String filterId) {
         List<String> certainFilters = filters.get(filterId);
         return certainFilters == null ?
                 new ArrayList<>() :
