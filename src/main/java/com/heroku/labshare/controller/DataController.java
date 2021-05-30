@@ -7,7 +7,6 @@ import com.heroku.labshare.json.faculty.Faculty;
 import com.heroku.labshare.json.specialty.Specialty;
 import com.heroku.labshare.json.subject.Subject;
 import com.heroku.labshare.json.wrapper.TaskIdWithUserIdWrapper;
-import com.heroku.labshare.model.Task;
 import com.heroku.labshare.service.DataService;
 import com.heroku.labshare.service.SearchService;
 import com.heroku.labshare.service.TaskService;
@@ -91,13 +90,13 @@ public class DataController {
         excludeKeySet.forEach(query::remove);
     }
 
-    @PutMapping("/like")
+    @PostMapping("/like")
     public void likeTask(@RequestBody TaskIdWithUserIdWrapper wrapper) {
         userService.like(wrapper.getUserId(), wrapper.getTaskId());
     }
 
     @GetMapping("/fetchTask")
-    public Task fetchTask(@RequestParam Long id) {
+    public TaskJson fetchTask(@RequestParam Long id) {
         return taskService.getTaskById(id);
     }
 }
