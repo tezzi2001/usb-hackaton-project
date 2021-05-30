@@ -36,7 +36,7 @@ public class SearchService {
     }
 
     public SearchResponse search(String input) {
-        List<Task> allTasks = taskRepository.findTasksByTopic(input);
+        List<Task> allTasks = findTasksByTopic(input);
         return search(allTasks);
     }
 
@@ -45,7 +45,7 @@ public class SearchService {
         List<String> specialityOptionsId = getFiltersOrEmpty(filters, SPECIALITY);
         List<String> subjectOptionsId = getFiltersOrEmpty(filters, SUBJECT);
 
-        List<Task> allTasks = taskRepository.findTasksByTopic(input);
+        List<Task> allTasks = findTasksByTopic(input);
 
         List<Task> filteredTasks = allTasks.stream()
                 .filter(task -> applyFacultyFilter(facultyOptionsId, task))
@@ -165,5 +165,19 @@ public class SearchService {
         return certainFilters == null ?
                 new ArrayList<>() :
                 certainFilters;
+    }
+
+    private List<Task> findTasksByTopic(String input) {
+        String[] inputStrings = input.split("//s+");
+        return taskRepository.findAll().stream()
+                .filter(task -> {
+                    for (String inputString : inputStrings) {
+                        if (task.getTopic().contains(inputString)) {
+                            return true;
+                        }
+                    }
+                    return false;
+                })
+                .collect(Collectors.toList());
     }
 }

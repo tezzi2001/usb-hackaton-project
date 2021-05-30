@@ -8,6 +8,4 @@ import java.util.List;
 
 @Repository
 public interface TaskRepository extends JpaRepository<Task, Long> {
-
-    List<Task> findTasksByTopic(String topic);
 }
