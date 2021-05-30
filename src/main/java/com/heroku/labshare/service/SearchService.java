@@ -13,10 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.heroku.labshare.constant.FiltersNames.*;
@@ -36,8 +33,7 @@ public class SearchService {
     }
 
     public SearchResponse search(String input) {
-        List<Task> allTasks = taskRepository.findTasksByTopic(input);
-        return search(allTasks);
+        return search(searchInternal(input));
     }
 
     public SearchResponse search(String input, MultiValueMap<String, String> filters) {
@@ -45,9 +41,9 @@ public class SearchService {
         List<String> specialityOptionsId = getFiltersOrEmpty(filters, SPECIALITY);
         List<String> subjectOptionsId = getFiltersOrEmpty(filters, SUBJECT);
 
-        List<Task> allTasks = taskRepository.findTasksByTopic(input);
+        List<Task> tasks = searchInternal(input);
 
-        List<Task> filteredTasks = allTasks.stream()
+        List<Task> filteredTasks = tasks.stream()
                 .filter(task -> applyFacultyFilter(facultyOptionsId, task))
                 .filter(task -> applySpecialityFilter(specialityOptionsId, task))
                 .filter(task -> applySubjectFilter(subjectOptionsId, task))
@@ -70,6 +66,22 @@ public class SearchService {
                 .collect(Collectors.toList());
 
         return search(filteredTasks);
+    }
+
+    private List<Task> searchInternal(String input) {
+        String[] words = input.split("\\s+");
+        List<List<Task>> tasksTwoDim = Arrays.stream(words)
+                .map(taskRepository::findTasksByTopicContaining)
+                .collect(Collectors.toList());
+        List<Task> resultTasks = new ArrayList<>(tasksTwoDim.remove(0));
+        for (List<Task> tasks : tasksTwoDim) {
+            List<Task> tempTasks = tasks.stream()
+                    .filter(resultTasks::contains)
+                    .collect(Collectors.toList());
+            resultTasks.clear();
+            resultTasks.addAll(tempTasks);
+        }
+        return resultTasks;
     }
 
     boolean applyFacultyFilter(List<String> optionsId, Task task) {
