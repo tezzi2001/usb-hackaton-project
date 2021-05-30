@@ -5,6 +5,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.heroku.labshare.json.UserJson;
 import com.heroku.labshare.json.wrapper.TokenWithUserWrapper;
+import com.heroku.labshare.model.Role;
 import com.heroku.labshare.model.User;
 import com.heroku.labshare.repository.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -74,6 +75,8 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .username(user.getUsername())
                 .faculty(user.getFaculty())
                 .specialty(user.getSpecialty())
+                .userId(user.getId())
+                .isApproved(Role.APPROVED_USER == user.getRole())
                 .build();
         res.getWriter().write(mapper.writeValueAsString(tokenWithUserWrapper));
         res.getWriter().flush();
