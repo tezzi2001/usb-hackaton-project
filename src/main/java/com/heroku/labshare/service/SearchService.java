@@ -36,8 +36,7 @@ public class SearchService {
     }
 
     public SearchResponse search(String input) {
-        List<Task> allTasks = taskRepository.findTasksByTopic(input);
-        return search(allTasks);
+        return search(searchInternal(input));
     }
 
     public SearchResponse search(String input, MultiValueMap<String, String> filters) {
@@ -45,9 +44,9 @@ public class SearchService {
         List<String> specialityOptionsId = getFiltersOrEmpty(filters, SPECIALITY);
         List<String> subjectOptionsId = getFiltersOrEmpty(filters, SUBJECT);
 
-        List<Task> allTasks = taskRepository.findTasksByTopic(input);
+        List<Task> tasks = searchInternal(input);
 
-        List<Task> filteredTasks = allTasks.stream()
+        List<Task> filteredTasks = tasks.stream()
                 .filter(task -> applyFacultyFilter(facultyOptionsId, task))
                 .filter(task -> applySpecialityFilter(specialityOptionsId, task))
                 .filter(task -> applySubjectFilter(subjectOptionsId, task))
@@ -72,15 +71,31 @@ public class SearchService {
         return search(filteredTasks);
     }
 
-    private boolean applyFacultyFilter(List<String> optionsId, Task task) {
+    private List<Task> searchInternal(String input) {
+        String[] words = input.split("\\s+");
+        List<List<Task>> tasksTwoDim = Arrays.stream(words)
+                .map(taskRepository::findTasksByTopicContaining)
+                .collect(Collectors.toList());
+        List<Task> resultTasks = new ArrayList<>(tasksTwoDim.remove(0));
+        for (List<Task> tasks : tasksTwoDim) {
+            List<Task> tempTasks = tasks.stream()
+                    .filter(resultTasks::contains)
+                    .collect(Collectors.toList());
+            resultTasks.clear();
+            resultTasks.addAll(tempTasks);
+        }
+        return resultTasks;
+    }
+
+    boolean applyFacultyFilter(List<String> optionsId, Task task) {
         return optionsId.isEmpty() || optionsId.contains(task.getFaculty().toString());
     }
 
-    private boolean applySpecialityFilter(List<String> optionsId, Task task) {
+    boolean applySpecialityFilter(List<String> optionsId, Task task) {
         return optionsId.isEmpty() || optionsId.contains(task.getSpecialty().toString());
     }
 
-    private boolean applySubjectFilter(List<String> optionsId, Task task) {
+    boolean applySubjectFilter(List<String> optionsId, Task task) {
         return optionsId.isEmpty() || optionsId.contains(task.getSubject().toString());
     }
 
@@ -93,7 +108,7 @@ public class SearchService {
     }
 
     //TODO: refactor
-    private Filter[] getAllFilters() {
+    Filter[] getAllFilters() {
         Filter[] filters = new Filter[3];
 
         Option[] facultyOptions = Arrays.stream(faculties)
@@ -115,7 +130,7 @@ public class SearchService {
     }
 
     // TODO: refactor
-    private Filter[] getOnlyPresentFilters(Filter[] filters, TaskJson[] taskJsons) {
+    Filter[] getOnlyPresentFilters(Filter[] filters, TaskJson[] taskJsons) {
         Set<Integer> facultyIdSet = Arrays.stream(taskJsons)
                 .map(TaskJson::getFaculty)
                 .collect(Collectors.toSet());
@@ -160,7 +175,7 @@ public class SearchService {
         return newOptions.toArray(new Option[0]);
     }
 
-    private List<String> getFiltersOrEmpty(MultiValueMap<String, String> filters, String filterId) {
+    List<String> getFiltersOrEmpty(MultiValueMap<String, String> filters, String filterId) {
         List<String> certainFilters = filters.get(filterId);
         return certainFilters == null ?
                 new ArrayList<>() :
