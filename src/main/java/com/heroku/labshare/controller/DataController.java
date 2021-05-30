@@ -1,14 +1,12 @@
 package com.heroku.labshare.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.heroku.labshare.config.JsonConfig;
 import com.heroku.labshare.json.SearchResponse;
 import com.heroku.labshare.json.TaskJson;
 import com.heroku.labshare.json.faculty.Faculty;
 import com.heroku.labshare.json.specialty.Specialty;
 import com.heroku.labshare.json.subject.Subject;
 import com.heroku.labshare.json.wrapper.TaskIdWithUserIdWrapper;
-import com.heroku.labshare.model.Task;
 import com.heroku.labshare.service.DataService;
 import com.heroku.labshare.service.SearchService;
 import com.heroku.labshare.service.TaskService;
@@ -21,6 +19,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -35,7 +34,9 @@ public class DataController {
 
     private final DataService dataService;
     private final SearchService searchService;
-    private final JsonConfig jsonConfig;
+    private final Faculty[] faculties;
+    private final Specialty[] specialties;
+    private final Subject[] subjects;
     private final ObjectMapper mapper;
     private final UserService userService;
     private final TaskService taskService;
@@ -50,18 +51,18 @@ public class DataController {
     }
 
     @GetMapping("/faculty")
-    public Faculty[] getFaculties() {
-        return jsonConfig.getFaculties();
+    public List<Faculty> getFaculties() {
+        return Arrays.asList(faculties.clone());
     }
 
     @GetMapping("/specialty")
-    public Specialty[] getSpecialties() {
-        return jsonConfig.getSpecialties();
+    public List<Specialty> getSpecialties() {
+        return Arrays.asList(specialties.clone());
     }
 
     @GetMapping("/subject")
-    public Subject[] getSubjects() {
-        return jsonConfig.getSubjects();
+    public List<Subject> getSubjects() {
+        return Arrays.asList(subjects.clone());
     }
 
     @GetMapping("/downloadLink")
@@ -90,13 +91,13 @@ public class DataController {
         excludeKeySet.forEach(query::remove);
     }
 
-    @PutMapping("/like/increase")
+    @PostMapping("/like")
     public void likeTask(@RequestBody TaskIdWithUserIdWrapper wrapper) {
-        userService.likeTask(wrapper.getUserId(), wrapper.getTaskId());
+        userService.like(wrapper.getUserId(), wrapper.getTaskId());
     }
 
     @GetMapping("/fetchTask")
-    public Task fetchTask(@RequestParam Long id) {
+    public TaskJson fetchTask(@RequestParam Long id) {
         return taskService.getTaskById(id);
     }
 }

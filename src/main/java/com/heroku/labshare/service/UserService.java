@@ -8,12 +8,11 @@ import com.heroku.labshare.model.User;
 import com.heroku.labshare.repository.TaskRepository;
 import com.heroku.labshare.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.Arrays;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -26,7 +25,7 @@ public class UserService {
         String username = JWT.decode(token).getSubject();
         return new UserJson(userRepository
             .findByUsername(username)
-            .orElseThrow(() -> new EntityNotFoundException("User not found by username" + username)));
+            .orElseThrow(() -> new EntityNotFoundException("User not found by username " + username)));
     }
 
     public boolean isUserApprovedById(Long id) {
@@ -36,27 +35,24 @@ public class UserService {
         return user.getRole() == Role.APPROVED_USER;
     }
 
-    @SneakyThrows
     @Transactional
-    public void likeTask(Long userId, Long taskId) {
-        User currentUser = userRepository.findById(userId)
-            .orElseThrow(() -> new EntityNotFoundException("User not found by id " + userId));
+    public void like(Long userId, Long taskId) {
+        User user = userRepository
+                .findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found by id " + userId));
 
-        Task likedTask = taskRepository.findById(taskId)
-            .orElseThrow(() -> new EntityNotFoundException("Task not found by id " + userId));
+        Task task = taskRepository
+                .findById(taskId)
+                .orElseThrow(() -> new EntityNotFoundException("Task not found by id " + userId));
 
-        Long[] likedIds = currentUser.getLikedIDs();
-//        for (Long likedId : likedIds) {
-//            if (taskId.equals(likedId)) {
-//                throw new Exception("Task already liked");
-//            }
-//        }
-        likedIds = Arrays.copyOf(likedIds, likedIds.length + 1);
-        likedIds[likedIds.length - 1] = taskId;
-        currentUser.setLikedIDs(likedIds);
-        likedTask.setLikeCount(likedTask.getLikeCount() + 1);
+        List<User> likedUsers = task.getLikedUsers();
+        if (likedUsers.contains(user)) {
+            likedUsers.remove(user);
+        } else {
+            likedUsers.add(user);
+        }
+        task.setLikedUsers(likedUsers);
 
-        userRepository.save(currentUser);
-        taskRepository.save(likedTask);
+        taskRepository.save(task);
     }
 }

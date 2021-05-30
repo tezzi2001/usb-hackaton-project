@@ -2,28 +2,32 @@ package com.heroku.labshare.security.filter;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.heroku.labshare.model.User;
+import com.heroku.labshare.repository.UserRepository;
 import com.heroku.labshare.service.AuthService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
+import javax.persistence.EntityNotFoundException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
 
 import static com.heroku.labshare.constant.SecurityConstants.*;
 
 public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 
     private final AuthService authService;
+    private final UserRepository userRepository;
 
-    public JWTAuthorizationFilter(AuthenticationManager authManager, AuthService authService) {
+    public JWTAuthorizationFilter(AuthenticationManager authManager, AuthService authService, UserRepository userRepository) {
         super(authManager);
         this.authService = authService;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -47,9 +51,12 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
                 .build()
                 .verify(token) //TODO: add exception handling(on expire)
                 .getSubject();
+        User user = userRepository
+                .findByUsername(username)
+                .orElseThrow(() -> new EntityNotFoundException("User not found on authorization"));
 
         if (username != null && authService.canAuthorize(token)) {
-            return new UsernamePasswordAuthenticationToken(username, token, new ArrayList<>());
+            return new UsernamePasswordAuthenticationToken(username, null, user.getRole().getAuthorities());
         }
 
         return null;
