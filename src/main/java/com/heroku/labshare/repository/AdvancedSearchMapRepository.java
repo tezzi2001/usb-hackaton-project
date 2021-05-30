@@ -9,5 +9,5 @@ import java.util.List;
 @Repository
 public interface AdvancedSearchMapRepository extends JpaRepository<AdvancedSearchMap, Long> {
 
-    List<AdvancedSearchMap> findByWord(String word);
+    List<AdvancedSearchMap> findByWordContaining(String word);
 }

@@ -6,7 +6,6 @@ import com.heroku.labshare.json.filter.Filter;
 import com.heroku.labshare.model.AdvancedSearchMap;
 import com.heroku.labshare.model.Task;
 import com.heroku.labshare.repository.AdvancedSearchMapRepository;
-import com.heroku.labshare.repository.TaskRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
@@ -17,14 +16,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.heroku.labshare.constant.FiltersNames.*;
-import static com.heroku.labshare.constant.FiltersNames.SUBJECT;
 
 @Service
 @RequiredArgsConstructor
 public class AdvancedSearchService {
 
     private final SearchService searchService;
-    private final TaskRepository taskRepository;
     private final AdvancedSearchMapRepository advancedSearchMapRepository;
 
     public SearchResponse search(String input) {
@@ -50,9 +47,10 @@ public class AdvancedSearchService {
     private List<Task> searchInMap(String input) {
         String[] inputStrings = input.split("//s+");
         return Arrays.stream(inputStrings)
-                .map(advancedSearchMapRepository::findByWord)
+                .map(advancedSearchMapRepository::findByWordContaining)
                 .flatMap(Collection::stream)
                 .map(AdvancedSearchMap::getTask)
+                .distinct()
                 .collect(Collectors.toList());
     }
 

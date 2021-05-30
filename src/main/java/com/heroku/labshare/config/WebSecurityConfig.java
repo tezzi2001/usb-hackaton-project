@@ -1,6 +1,7 @@
 package com.heroku.labshare.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.heroku.labshare.model.Role;
 import com.heroku.labshare.repository.UserRepository;
 import com.heroku.labshare.security.filter.JWTAuthenticationFilter;
 import com.heroku.labshare.security.filter.JWTAuthorizationFilter;
@@ -48,6 +49,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers(HttpMethod.POST, SEARCH_URL).permitAll()
             .antMatchers(HttpMethod.POST, LIKE_URL).permitAll()
             .antMatchers(HttpMethod.GET, FETCH_TASK_URL).permitAll()
+            .antMatchers(HttpMethod.GET, ADVANCED_SEARCH_URL).permitAll()
+            .antMatchers(HttpMethod.POST, CRAWLER_URL).permitAll()
             .anyRequest().authenticated()
             .and()
             .addFilter(new JWTAuthenticationFilter(authenticationManager(), mapper, userRepository))
